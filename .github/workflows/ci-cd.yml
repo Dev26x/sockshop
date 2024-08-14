@@ -46,7 +46,7 @@ jobs:
       - name: Run Kubernetes script
         run: |
           chmod +x scripts/apply-kubernetes.sh
-          scripts.apply-kubernetes.sh
+          scripts/apply-kubernetes.sh
 
   prometheus:
     name: Prometheus Deployment
