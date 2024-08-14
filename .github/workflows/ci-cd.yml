@@ -1,4 +1,3 @@
----
 name: CI/CD Pipeline
 
 on:
@@ -16,10 +15,25 @@ jobs:
 
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.0.0  # Specify your desired version
+
+    - name: Debug information
+      run: |
+        pwd
+        ls -la ./scripts
+        file ./scripts/run-terraform.sh
+
+    - name: Make script executable
+      run: chmod +x ./scripts/run-terraform.sh
 
     - name: Run Terraform Deployment
-      run: ../../scripts/run-terraform.sh
+      run: ./scripts/run-terraform.sh
+      working-directory: ./scripts
 
   kubernetes:
     name: Deploy Kubernetes Resources
@@ -28,25 +42,14 @@ jobs:
 
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
+
+    - name: Make script executable
+      run: chmod +x ./scripts/apply-kubernetes.sh
 
     - name: Run Kubernetes Deployment
-      run: ../../scripts/apply-kubernetes.sh
-
-  monitoring:
-    name: Deploy Monitoring Stack (Prometheus & Grafana)
-    runs-on: ubuntu-latest
-    needs: alerting
-    
-    steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
-    
-    - name: Run Prometheus
-      run: ../../scripts/deploy-prometheus.sh
-    
-    - name: Run Grafana
-      run: ../../scripts/deploy-grafana.sh
+      run: ./scripts/apply-kubernetes.sh
+      working-directory: ./scripts
 
   alerting:
     name: Deploy Alerting Stack (Alertmanager)
@@ -55,10 +58,37 @@ jobs:
 
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
+
+    - name: Make script executable
+      run: chmod +x ./scripts/alerting.sh
 
     - name: Run Alerting Deployment
-      run: ../../scripts/alerting.sh
+      run: ./scripts/alerting.sh
+      working-directory: ./scripts
+
+  monitoring:
+    name: Deploy Monitoring Stack (Prometheus & Grafana)
+    runs-on: ubuntu-latest
+    needs: alerting
+    
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+    
+    - name: Make Prometheus script executable
+      run: chmod +x ./scripts/deploy-prometheus.sh
+    
+    - name: Run Prometheus
+      run: ./scripts/deploy-prometheus.sh
+      working-directory: ./scripts
+    
+    - name: Make Grafana script executable
+      run: chmod +x ./scripts/deploy-grafana.sh
+    
+    - name: Run Grafana
+      run: ./scripts/deploy-grafana.sh
+      working-directory: ./scripts
 
   logging:
     name: Deploy Logging Stack (Elasticsearch, Filebeat, etc.)
@@ -67,7 +97,11 @@ jobs:
 
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
+
+    - name: Make script executable
+      run: chmod +x ./scripts/logging.sh
 
     - name: Run Logging Deployment
-      run: ../../scripts/logging.sh
+      run: ./scripts/logging.sh
+      working-directory: ./scripts
