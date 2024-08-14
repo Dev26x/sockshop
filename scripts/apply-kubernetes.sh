@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Navigate to the kubernetes directory
-cd ../kubernetes 
+# Navigate to the kubernetes directory from the scripts directory
+cd "$(dirname "$0")/../kubernetes" || { echo "Kubernetes directory not found"; exit 1; }
 
 # Install NGINX Ingress controller
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx

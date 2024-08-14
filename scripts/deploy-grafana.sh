@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# navigate to monitoring folder
-cd ../monitoring
+#navigate to monitoring directory
+cd "$(dirname "$0")/../monitoring/grafana" || { echo "Grafana directory not found"; exit 1; }
 
 # Define the namespace YAML file and NodePorts
 MONITORING_NAMESPACE_FILE="00-monitoring-ns.yaml"

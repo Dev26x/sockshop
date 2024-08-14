@@ -48,7 +48,7 @@
 # echo "Alerting setup completed successfully!"
 
 # Navigate to alerting directory
-cd ../alerting
+cd "$(dirname "$0")/../alerting" || { echo "Alerting directory not found"; exit 1; }
 
 kubectl create secret generic slack-hook-url \
   --from-literal=slack-hook-url=https://hooks.slack.com/services/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 \

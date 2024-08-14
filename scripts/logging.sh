@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Navigate to logging directory
-cd ../logging
+cd "$(dirname "$0")/../logging" || { echo "Logging directory not found"; exit 1; }
 
 # Apply Elasticsearch Deployment and Service
 kubectl create secret tls elasticsearch-tls \

@@ -22,8 +22,8 @@ else
     echo "kubectl is already installed"
 fi
 
-# Navigate to your Terraform directory
-cd ../terraform
+# Navigate to the terraform directory from the scripts directory
+cd "$(dirname "$0")/../terraform" || { echo "Terraform directory not found"; exit 1; }
 
 # Initialize Terraform
 echo "Initializing Terraform..."
