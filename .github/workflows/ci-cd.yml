@@ -55,17 +55,23 @@ jobs:
           scripts/apply-kubernetes.sh
 
   prometheus:
-    name: Prometheus Deployment
-    needs: kubernetes
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Run Prometheus script
+      - name: Set up Kubernetes context
         run: |
-          chmod +x scripts/deploy-prometheus.sh
-          scripts/deploy-prometheus.sh
+          aws eks update-kubeconfig --region ${{ vars.REGION }} --name "socksShop-eks-hakeem"
+
+      - name: Make scripts executable
+        run: chmod +x scripts/*.sh
+
+      - name: Delay execution
+        run: sleep 300
+
+      - name: Deploy Prometheus
+        run: scripts/deploy-prometheus.sh
 
   grafana:
     name: Grafana Deployment
@@ -93,22 +99,22 @@ jobs:
           chmod +x scripts/alerting.sh
           scripts/alerting.sh
 
-  logging:
-    name: Logging Setup
-    needs: alerting
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+  # logging:
+  #   name: Logging Setup
+  #   needs: alerting
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
 
-      - name: Run Logging script
-        run: |
-          chmod +x scripts/logging.sh
-          scripts/logging.sh
+  #     - name: Run Logging script
+  #       run: |
+  #         chmod +x scripts/logging.sh
+  #         scripts/logging.sh
 
   rollback:
     name: Rollback
-    needs: [terraform, kubernetes, prometheus, grafana, alerting, logging] # Ensures rollback runs after all previous jobs
+    needs: [terraform, kubernetes, prometheus, grafana, alerting] # Ensures rollback runs after all previous jobs
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
