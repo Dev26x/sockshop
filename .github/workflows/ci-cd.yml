@@ -10,98 +10,92 @@ on:
 
 jobs:
   terraform:
-    name: Terraform Setup and Deployment
+    name: Terraform Deployment
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v3
-      with:
-        terraform_version: latest
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.REGION }}
 
-    - name: Debug information
-      run: |
-        pwd
-        ls -la ./scripts
-        file ./scripts/run-terraform.sh
-
-    - name: Make script executable
-      run: chmod +x ./scripts/run-terraform.sh
-
-    - name: Run Terraform Deployment
-      run: ./scripts/run-terraform.sh
-      working-directory: ./scripts
+      - name: Run Terraform script
+        run: |
+          chmod +x scripts/run-terraform.sh
+          scripts/run-terraform.sh
 
   kubernetes:
-    name: Deploy Kubernetes Resources
-    runs-on: ubuntu-latest
+    name: Kubernetes Deployment
     needs: terraform
-
+    runs-on: ubuntu-latest
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Make script executable
-      run: chmod +x ./scripts/apply-kubernetes.sh
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.REGION }}
 
-    - name: Run Kubernetes Deployment
-      run: ./scripts/apply-kubernetes.sh
-      working-directory: ./scripts
+      - name: Run Kubernetes script
+        run: |
+          chmod +x scripts/apply-kubernetes.sh
+          scripts.apply-kubernetes.sh
+
+  prometheus:
+    name: Prometheus Deployment
+    needs: kubernetes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run Prometheus script
+        run: |
+          chmod +x scripts/deploy-prometheus.sh
+          scripts/deploy-prometheus.sh
+
+  grafana:
+    name: Grafana Deployment
+    needs: prometheus
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run Grafana script
+        run: |
+          chmod +x scripts/deploy-grafana.sh
+          scripts/deploy-grafana.sh
 
   alerting:
-    name: Deploy Alerting Stack (Alertmanager)
+    name: Alerting Setup
+    needs: grafana
     runs-on: ubuntu-latest
-    needs: kubernetes
-
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Make script executable
-      run: chmod +x ./scripts/alerting.sh
-
-    - name: Run Alerting Deployment
-      run: ./scripts/alerting.sh
-      working-directory: ./scripts
-
-  monitoring:
-    name: Deploy Monitoring Stack (Prometheus & Grafana)
-    runs-on: ubuntu-latest
-    needs: alerting
-    
-    steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
-    
-    - name: Make Prometheus script executable
-      run: chmod +x ./scripts/deploy-prometheus.sh
-    
-    - name: Run Prometheus
-      run: ./scripts/deploy-prometheus.sh
-      working-directory: ./scripts
-    
-    - name: Make Grafana script executable
-      run: chmod +x ./scripts/deploy-grafana.sh
-    
-    - name: Run Grafana
-      run: ./scripts/deploy-grafana.sh
-      working-directory: ./scripts
+      - name: Run Alerting script
+        run: |
+          chmod +x scripts/alerting.sh
+          scripts/alerting.sh
 
   logging:
-    name: Deploy Logging Stack (Elasticsearch, Filebeat, etc.)
+    name: Logging Setup
+    needs: alerting
     runs-on: ubuntu-latest
-    needs: monitoring
-
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Make script executable
-      run: chmod +x ./scripts/logging.sh
-
-    - name: Run Logging Deployment
-      run: ./scripts/logging.sh
-      working-directory: ./scripts
+      - name: Run Logging script
+        run: |
+          chmod +x scripts/logging.sh
+          scripts/logging.sh
