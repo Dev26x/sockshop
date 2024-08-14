@@ -28,6 +28,16 @@ jobs:
           chmod +x scripts/run-terraform.sh
           scripts/run-terraform.sh
 
+      - name: Get Terraform Outputs
+        id: terraform_outputs
+        run: |
+          echo "CLUSTER_NAME=$(terraform output -raw cluster_name)" >> $GITHUB_ENV
+          echo "AWS_REGION=$(terraform output -raw aws_region)" >> $GITHUB_ENV
+          echo "AWS_ACCOUNT_ID=$(terraform output -raw aws_account_id)" >> $GITHUB_ENV
+          echo "ROUTE_53_ZONE_ID=$(terraform output -raw route_53_zone_id)" >> $GITHUB_ENV
+          echo "EKS_CLUSTER_NAME=$(terraform output -raw eks_cluster_name)" >> $GITHUB_ENV
+        working-directory: terraform
+
   kubernetes:
     name: Kubernetes Deployment
     needs: terraform
@@ -42,6 +52,12 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.REGION }}
+
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
+
+      - name: Check Kubernetes cluster
+        run: kubectl cluster-info
 
       - name: Run Kubernetes script
         run: |
@@ -75,7 +91,7 @@ jobs:
           scripts/deploy-grafana.sh
 
   alerting:
-    name: Alerting Setup
+    name: Alerting Setup slack
     needs: grafana
     runs-on: ubuntu-latest
     steps:
