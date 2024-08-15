@@ -1,13 +1,13 @@
-name: Alerting Setup
+name: Grafana Deployment
 
 on:
   workflow_run:
-    workflows: ["Grafana Deployment"]
+    workflows: ["Prometheus Deployment"]
     types:
       - completed
 
 jobs:
-  alerting:
+  grafana:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -20,9 +20,9 @@ jobs:
     - name: Update kubeconfig
       run: |
         aws eks update-kubeconfig --name ${{ needs.terraform.outputs.cluster_name }} --region ${{ vars.REGION }}
-    - name: Setup Alerting
+    - name: Deploy Grafana
       env:
         CLUSTER_NAME: ${{ needs.terraform.outputs.cluster_name }}
       run: |
-        chmod +x ./scripts/alerting.sh
-        ./scripts/alerting.sh
+        chmod +x ./scripts/deploy-grafana.sh
+        ./scripts/deploy-grafana.sh

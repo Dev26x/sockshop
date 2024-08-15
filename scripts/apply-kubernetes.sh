@@ -2,63 +2,57 @@
 
 set -e
 
-# Navigate to the Kubernetes directory from the scripts directory
+# Navigate to the Kubernetes directory
 cd "$(dirname "$0")/../kubernetes" || { echo "Kubernetes directory not found"; exit 1; }
+
+# Check if running in GitHub Actions
+if [ -n "$GITHUB_ACTIONS" ]; then
+    # In GitHub Actions, ensure AWS CLI is configured
+    aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+    aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+    aws configure set default.region $AWS_REGION
+
+    # Update kubeconfig for EKS cluster
+    aws eks update-kubeconfig --name $CLUSTER_NAME
+fi
 
 # Install NGINX Ingress controller
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
-if helm list --namespace ingress-nginx | grep -q nginx-ingress; then
-  echo "NGINX Ingress controller already installed. Uninstalling it first."
-  helm uninstall nginx-ingress --namespace ingress-nginx
-  sleep 30
+if ! helm list -n ingress-nginx | grep -q nginx-ingress; then
+    helm install nginx-ingress ingress-nginx/ingress-nginx --namespace ingress-nginx --create-namespace
+else
+    helm upgrade nginx-ingress ingress-nginx/ingress-nginx --namespace ingress-nginx
 fi
-helm install nginx-ingress ingress-nginx/ingress-nginx --namespace ingress-nginx --create-namespace
 
-# Wait for the Ingress controller to get an external IP
-echo "Waiting for the Ingress controller to get an external IP..."
-while ! kubectl get svc -n ingress-nginx | grep -q 'EXTERNAL-IP'; do
-  sleep 10
-done
 
 # Install Cert-Manager
-kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v1.5.4/cert-manager.yaml
-echo "Waiting for Cert-Manager to be fully deployed..."
-sleep 180
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
 
-# Check Cert-Manager status
-kubectl get pods -n cert-manager
-kubectl get svc -n cert-manager
 
 # Deploy microservices
 kubectl apply -f deploy.yml
 
-# Wait for services to be ready
-echo "Waiting for services to be ready..."
-kubectl wait --for=condition=available --timeout=120s deployment -n sock-shop
 
 # Apply ClusterIssuer
 kubectl apply -f clusterissuer.yml
-
-# Verify ClusterIssuer
-echo "Verifying ClusterIssuer status..."
-kubectl describe clusterissuer letsencrypt-prod
+sleep 10  # Give some time for the ClusterIssuer to be processed
 
 # Apply the Ingress resource
 kubectl apply -f ingress.yml
 
-# Wait for Ingress to be ready
-echo "Waiting for Ingress to be ready..."
-kubectl wait --for=condition=ready --timeout=120s ingress -n sock-shop
-
 # Apply the certificate
 kubectl apply -f certificate.yml
-
-# Verify Certificate
-echo "Verifying Certificate status..."
-kubectl get certificates
-kubectl describe certificate socks-shop-tls -n sock-shop
+sleep 30  # Give some time for the certificate to be processed
 
 # Final checks
+echo "Ingress Status:"
 kubectl get ingress -n sock-shop 
+echo "Ingress Details:"
 kubectl describe ingress socks-shop-ingress -n sock-shop
+echo "Certificate Status:"
+kubectl get certificates -n sock-shop
+echo "Certificate Details:"
+kubectl describe certificate socks-shop-tls -n sock-shop
+
+echo "Kubernetes deployment completed successfully!"
