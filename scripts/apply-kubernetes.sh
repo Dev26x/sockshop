@@ -16,6 +16,7 @@ kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/relea
 
 # Wait for Cert-Manager to be fully deployed
 echo "Waiting for Cert-Manager and its webhook to be ready..."
+sleep 120
 kubectl rollout status deployment/cert-manager-webhook -n cert-manager --timeout=120s || { echo "Cert-Manager webhook is not ready"; exit 1; }
 
 # Deploy microservices
@@ -27,6 +28,7 @@ sleep 60
 # Apply ClusterIssuer
 echo "Applying ClusterIssuer..."
 kubectl apply -f clusterissuer.yml
+sleep 120 
 
 # Verify ClusterIssuer Status
 echo "Verifying ClusterIssuer status..."
@@ -36,7 +38,7 @@ kubectl wait --for=condition=Ready clusterissuer/letsencrypt-prod --timeout=120s
 kubectl apply -f ingress.yml
 
 # Wait for Ingress to be ready
-sleep 60
+sleep 120
 
 # Apply the certificate 
 kubectl apply -f certificate.yml
