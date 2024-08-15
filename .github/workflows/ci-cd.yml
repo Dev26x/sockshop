@@ -25,8 +25,8 @@ jobs:
 
     - name: Run Terraform Script
       run: |
-        chmod +x Scripts/run-terraform.sh
-        Scripts/run-terraform.sh
+        chmod +x scripts/run-terraform.sh
+        scripts/run-terraform.sh
 
   kubernetes:
     name: 'Kubernetes Deployment'
@@ -48,8 +48,8 @@ jobs:
 
     - name: Apply Kubernetes Manifests
       run: |
-        chmod +x Scripts/apply-kubernetes.sh
-        Scripts/apply-kubernetes.sh
+        chmod +x scripts/apply-kubernetes.sh
+        scripts/apply-kubernetes.sh
 
   monitoring:
     name: 'Deploy Monitoring'
@@ -71,13 +71,13 @@ jobs:
 
     - name: Deploy Prometheus
       run: |
-        chmod +x Scripts/deploy-prometheus.sh
-        Scripts/deploy-prometheus.sh
+        chmod +x scripts/deploy-prometheus.sh
+        scripts/deploy-prometheus.sh
 
     - name: Deploy Grafana
       run: |
-        chmod +x Scripts/deploy-grafana.sh
-        Scripts/deploy-grafana.sh
+        chmod +x scripts/deploy-grafana.sh
+        scripts/deploy-grafana.sh
 
   alerting:
     name: 'Deploy Alerting'
@@ -99,8 +99,8 @@ jobs:
 
     - name: Deploy Alerting
       run: |
-        chmod +x Scripts/alerting.sh
-        Scripts/alerting.sh
+        chmod +x scripts/alerting.sh
+        scripts/alerting.sh
 
 # name: CI/CD Pipeline
 
