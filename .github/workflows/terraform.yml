@@ -31,5 +31,7 @@ jobs:
     - name: Capture Terraform Output
       id: terraform-output
       run: |
-        echo "cluster_name=$(terraform output -raw cluster_name)" >> $GITHUB_OUTPUT
-        echo "region=$(terraform output -raw region)" >> $GITHUB_OUTPUT
+        terraform output -raw cluster_name > cluster_name.txt
+        terraform output -raw region > region.txt
+        echo "cluster_name=$(cat cluster_name.txt)" >> $GITHUB_ENV
+        echo "region=$(cat region.txt)" >> $GITHUB_ENV
