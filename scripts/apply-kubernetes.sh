@@ -6,18 +6,17 @@ cd "$(dirname "$0")/../kubernetes" || { echo "Kubernetes directory not found"; e
 # Install NGINX Ingress controller
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
-helm install nginx-ingress ingress-nginx/ingress-nginx --namespace ingress-nginx --create-namespace
+helm install nginx-ingress ingress-nginx/ingress-nginx --namespace ingress-nginx --create-namespace || { echo "NGINX Ingress installation failed"; exit 1; }
 
 # Wait for the Ingress controller to get an external IP
 kubectl get svc -n ingress-nginx
 
 # Install Cert-Manager
-kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v1.5.4/cert-manager.yaml
+kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v1.5.4/cert-manager.yaml || { echo "Cert-Manager installation failed"; exit 1; }
 
 # Wait for Cert-Manager to be fully deployed
 echo "Waiting for Cert-Manager and its webhook to be ready..."
-sleep 120
-kubectl rollout status deployment/cert-manager-webhook -n cert-manager --timeout=120s || { echo "Cert-Manager webhook is not ready"; exit 1; }
+kubectl rollout status deployment/cert-manager-webhook -n cert-manager --timeout=300s || { echo "Cert-Manager webhook is not ready"; exit 1; }
 
 # Deploy microservices
 kubectl apply -f deploy.yml
@@ -28,7 +27,6 @@ sleep 60
 # Apply ClusterIssuer
 echo "Applying ClusterIssuer..."
 kubectl apply -f clusterissuer.yml
-sleep 120 
 
 # Verify ClusterIssuer Status
 echo "Verifying ClusterIssuer status..."
@@ -38,7 +36,7 @@ kubectl wait --for=condition=Ready clusterissuer/letsencrypt-prod --timeout=120s
 kubectl apply -f ingress.yml
 
 # Wait for Ingress to be ready
-sleep 120
+sleep 60
 
 # Apply the certificate 
 kubectl apply -f certificate.yml
