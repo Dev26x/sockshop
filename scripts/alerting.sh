@@ -1,5 +1,3 @@
-
-
 # Navigate to alerting directory
 cd "$(dirname "$0")/../alerting" || { echo "Alerting directory not found"; exit 1; }
 
