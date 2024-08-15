@@ -13,7 +13,10 @@ kubectl get svc -n ingress-nginx
 
 # Install Cert-Manager
 kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v1.5.4/cert-manager.yaml
-sleep 180
+
+# Wait for Cert-Manager to be fully deployed
+echo "Waiting for Cert-Manager and its webhook to be ready..."
+kubectl rollout status deployment/cert-manager-webhook -n cert-manager --timeout=120s || { echo "Cert-Manager webhook is not ready"; exit 1; }
 
 # Deploy microservices
 kubectl apply -f deploy.yml
@@ -22,7 +25,12 @@ kubectl apply -f deploy.yml
 sleep 60
 
 # Apply ClusterIssuer
+echo "Applying ClusterIssuer..."
 kubectl apply -f clusterissuer.yml
+
+# Verify ClusterIssuer Status
+echo "Verifying ClusterIssuer status..."
+kubectl wait --for=condition=Ready clusterissuer/letsencrypt-prod --timeout=120s || { echo "ClusterIssuer is not ready"; exit 1; }
 
 # Apply the Ingress resource
 kubectl apply -f ingress.yml
@@ -33,22 +41,10 @@ sleep 60
 # Apply the certificate 
 kubectl apply -f certificate.yml
 
-#Verify ClusterIssuer Status
-sleep 120
-kubectl describe clusterissuer letsencrypt-prod
-
-#Check Ingress
-sleep 60
-
+# Verify the Ingress
 kubectl get ingress -n sock-shop 
-
 kubectl describe ingress socks-shop-ingress -n sock-shop
 
-#Monitor Certificates
+# Monitor Certificates
 kubectl get certificates
-
 kubectl describe certificate socks-shop-tls -n sock-shop  
-
-
-
-
