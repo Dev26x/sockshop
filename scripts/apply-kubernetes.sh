@@ -17,11 +17,17 @@ fi
 
 # Wait for the Ingress controller to get an external IP
 echo "Waiting for NGINX Ingress controller to get an external IP..."
-# Wait for service to be created
-kubectl wait --for=condition=available --timeout=60s svc -n ingress-nginx || { echo "Service in ingress-nginx namespace did not become available"; exit 1; }
-# Check service name
-SERVICE_NAME=$(kubectl get svc -n ingress-nginx -o jsonpath='{.items[0].metadata.name}')
+
+# List services in the ingress-nginx namespace
+SERVICE_NAME=$(kubectl get svc -n ingress-nginx -o jsonpath='{.items[0].metadata.name}' || { echo "Failed to retrieve services"; exit 1; })
+
+if [ -z "$SERVICE_NAME" ]; then
+    echo "No services found in the ingress-nginx namespace"
+    exit 1
+fi
+
 echo "Using service name: $SERVICE_NAME"
+# Wait for the service to have an external IP
 kubectl wait --for=condition=loadBalancer --timeout=300s svc/$SERVICE_NAME -n ingress-nginx || { echo "NGINX Ingress service did not get an external IP in time"; exit 1; }
 
 # Install Cert-Manager
