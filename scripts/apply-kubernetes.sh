@@ -18,11 +18,15 @@ fi
 # Wait for the Ingress controller to get an external IP
 echo "Waiting for NGINX Ingress controller to get an external IP..."
 
-# List services in the ingress-nginx namespace
-SERVICE_NAME=$(kubectl get svc -n ingress-nginx -o jsonpath='{.items[0].metadata.name}' || { echo "Failed to retrieve services"; exit 1; })
+# List services in the ingress-nginx namespace and check their status
+echo "Listing services in the ingress-nginx namespace..."
+kubectl get svc -n ingress-nginx || { echo "Failed to retrieve services"; exit 1; }
+
+# Retrieve service name
+SERVICE_NAME=$(kubectl get svc -n ingress-nginx -o jsonpath='{.items[?(@.metadata.name == "nginx-ingress-controller")].metadata.name}' || { echo "Failed to retrieve service name"; exit 1; })
 
 if [ -z "$SERVICE_NAME" ]; then
-    echo "No services found in the ingress-nginx namespace"
+    echo "No services with name 'nginx-ingress-controller' found in the ingress-nginx namespace"
     exit 1
 fi
 
