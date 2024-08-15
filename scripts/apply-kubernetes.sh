@@ -8,6 +8,7 @@ echo "Installing NGINX Ingress controller..."
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
 
+# Check if NGINX Ingress is already installed
 if ! helm list -n ingress-nginx | grep -q nginx-ingress; then
     helm install nginx-ingress ingress-nginx/ingress-nginx --namespace ingress-nginx --create-namespace || { echo "NGINX Ingress installation failed"; exit 1; }
 else
@@ -16,7 +17,12 @@ fi
 
 # Wait for the Ingress controller to get an external IP
 echo "Waiting for NGINX Ingress controller to get an external IP..."
-kubectl wait --for=condition=loadBalancer --timeout=300s svc/nginx-ingress-controller -n ingress-nginx || { echo "NGINX Ingress service did not get an external IP in time"; exit 1; }
+# Wait for service to be created
+kubectl wait --for=condition=available --timeout=60s svc -n ingress-nginx || { echo "Service in ingress-nginx namespace did not become available"; exit 1; }
+# Check service name
+SERVICE_NAME=$(kubectl get svc -n ingress-nginx -o jsonpath='{.items[0].metadata.name}')
+echo "Using service name: $SERVICE_NAME"
+kubectl wait --for=condition=loadBalancer --timeout=300s svc/$SERVICE_NAME -n ingress-nginx || { echo "NGINX Ingress service did not get an external IP in time"; exit 1; }
 
 # Install Cert-Manager
 echo "Installing Cert-Manager..."
