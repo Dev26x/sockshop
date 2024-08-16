@@ -129,6 +129,14 @@ Certificate issued:
 
 Monitoring is set up using Prometheus and Grafana.
 
+I exposed prometheus and grafana to my dash board using port forwarding with these command:
+```
+kubectl port-forward service/prometheus 31090:9090 -n monitoring
+
+kubectl port-forward service/grafana 31300:3000 -n monitoring
+
+```
+
 ![Alt text](capstone-images/promtheus-metrics.png)
 
 ![Alt text](capstone-images/grafana-dashboard-2.png)
