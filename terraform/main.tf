@@ -30,14 +30,14 @@ module "eks" {
   }
 
   eks_managed_node_groups = {
-    goody_node_1 = {
+    hakeem_node_1 = {
       min_size     = 1
       max_size     = 4
       desired_size = 1
 
       instance_types = ["t3.medium"]
     }
-    goody_node_2 = {
+    hakeem_node_2 = {
       min_size     = 1
       max_size     = 4
       desired_size = 1
