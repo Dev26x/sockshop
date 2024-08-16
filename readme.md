@@ -14,7 +14,7 @@ This project demonstrates a complete setup for deploying microservices using Inf
 4. [Setup](#setup)
 5. [Infrastructure (Terraform)](#infrastructure-terraform)
 6. [Kubernetes Deployment](#kubernetes-deployment)
-7. [Monitoring](#monitoring)
+7. [Monitoring and Logging](#Monitoring-and-Logging)
 8. [Alerting](#alerting)
 9. [Scripts](#scripts)
 10. [CI/CD Pipeline](#cicd-pipeline)
@@ -124,7 +124,7 @@ View all services and deployments using:  `kubectl get all -A`
 Certificate issued:
 ![certificate](capstone-images/certificate-proof.png)
 
-## Monitoring
+## Monitoring and Logging
 
 ![monitoring](capstone-images/monitoring-alerting-img.png)
 
@@ -186,7 +186,7 @@ Purpose: Deploys Kubernetes resources.
 - Ensures that all necessary Kubernetes objects (e.g., Deployments, Services, Ingresses) are created or updated.
 
 
-### Monitoring Scripts
+### Monitoring and Logging Scripts
 
 Prometheus 
 ![Prometheus script](capstone-images/prometheus-script.png)
@@ -227,7 +227,7 @@ The CI/CD pipeline is implemented using GitHub Actions and consists of four work
     ![kubernetes workflow](capstone-images/kubernetes-wkflw.png)
 
 
-3. Monitoring
+3. Monitoring and Logging
 
     Prometheus workflow
     ![prometheus workflow](capstone-images/prometheus-wkflw.png)
