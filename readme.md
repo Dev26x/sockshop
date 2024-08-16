@@ -124,6 +124,8 @@ View all services and deployments using:  `kubectl get all -A`
 Certificate issued:
 ![certificate](capstone-images/certificate-proof.png)
 
+*Remember to create A records in your domain dns pointing to the load balancer, and also create the same A record in your route 53 hosted zone.*
+
 ## Monitoring and Logging
 
 ![monitoring](capstone-images/monitoring-alerting-img.png)
@@ -244,3 +246,6 @@ The CI/CD pipeline is implemented using GitHub Actions and consists of four work
 
 ## Result
 
+The application is accessible on my domain (www.dev26x.com.ng) over HTTPS and secured using Let’s Encrypt for certificates.
+
+![frontend](capstone-images/FRONTEND.png)
