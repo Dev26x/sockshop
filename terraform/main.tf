@@ -37,6 +37,12 @@ module "vpc" {
   }
 }
 
+# KMS Key Resource
+resource "aws_kms_key" "this" {
+  description             = "KMS key for EKS cluster"
+  deletion_window_in_days = 10
+}
+
 # Conditional creation of KMS Alias
 resource "aws_kms_alias" "this" {
   count = var.create_alias ? 1 : 0

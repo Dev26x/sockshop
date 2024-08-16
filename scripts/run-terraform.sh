@@ -41,5 +41,5 @@ terraform apply --auto-approve
 echo "Updating kubeconfig for EKS cluster..."
 aws eks update-kubeconfig --name "socksShop-eks" --region "us-east-1"
 
-echo "Terraform setup completed successfully!"
+echo "Terraform setup has been completed successfully!"
 
