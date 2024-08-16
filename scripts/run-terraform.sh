@@ -37,28 +37,9 @@ terraform plan
 echo "Applying Terraform changes..."
 terraform apply --auto-approve
 
-#!/bin/bash
-
-# ... (previous Terraform commands)
-
-# Extract the region and cluster name from Terraform outputs
-REGION=$(terraform output -raw region)
-CLUSTER_NAME=$(terraform output -raw cluster_name)
-
 # Update kubeconfig for EKS cluster
 echo "Updating kubeconfig for EKS cluster..."
-aws eks update-kubeconfig --name "$CLUSTER_NAME" --region "$REGION"
-
-# Output the values for use in later steps
-if [ -n "$GITHUB_OUTPUT" ]; then
-    # We're in a GitHub Actions environment
-    echo "region=$REGION" >> $GITHUB_OUTPUT
-    echo "cluster_name=$CLUSTER_NAME" >> $GITHUB_OUTPUT
-else
-    # We're in a local environment
-    echo "Region: $REGION"
-    echo "Cluster Name: $CLUSTER_NAME"
-fi
+aws eks update-kubeconfig --name "socksShop-eks" --region "us-east-1"
 
 echo "Terraform setup completed successfully!"
 

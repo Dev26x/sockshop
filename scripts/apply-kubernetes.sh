@@ -13,7 +13,7 @@ if [ -n "$GITHUB_ACTIONS" ]; then
     aws configure set default.region $AWS_REGION
 
     # Update kubeconfig for EKS cluster
-    aws eks update-kubeconfig --name $CLUSTER_NAME
+    aws eks update-kubeconfig --name "socksShop-eks" --region "us-east-1"
 fi
 
 # Install NGINX Ingress controller
@@ -28,7 +28,6 @@ fi
 
 # Install Cert-Manager
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
-
 
 # Deploy microservices
 kubectl apply -f deploy.yml

@@ -1,28 +1,20 @@
-name: Alerting Setup
+name: Setup Alerting
 
 on:
   workflow_run:
-    workflows: ["Grafana Deployment"]
+    workflows: ["Deploy Grafana"]
     types:
       - completed
 
 jobs:
   alerting:
+    name: Setup Alerting
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ vars.REGION }}
-    - name: Update kubeconfig
-      run: |
-        aws eks update-kubeconfig --name ${{ needs.terraform.outputs.cluster_name }} --region ${{ vars.REGION }}
-    - name: Setup Alerting
-      env:
-        CLUSTER_NAME: ${{ needs.terraform.outputs.cluster_name }}
-      run: |
-        chmod +x ./scripts/alerting.sh
-        ./scripts/alerting.sh
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run Alerting Setup Script
+        run: |
+          chmod +x ./scripts/setup_alerting.sh
+          ./scripts/setup_alerting.sh

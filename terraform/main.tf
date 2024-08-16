@@ -6,13 +6,9 @@ data "aws_availability_zones" "available" {
 }
 
 locals {
-  cluster_name = "socksShop-eks-${random_string.suffix.result}"
+  cluster_name = "socksShop-eks"
 }
 
-resource "random_string" "suffix" {
-  length  = 5
-  special = false
-}
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
@@ -31,12 +27,12 @@ module "vpc" {
   enable_dns_hostnames = true
 
   public_subnet_tags = {
-    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
+    "kubernetes.io/cluster/socksShop-eks" = "shared"
     "kubernetes.io/role/elb"                      = 1
   }
 
   private_subnet_tags = {
-    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
+    "kubernetes.io/cluster/socksShop-eks" = "shared"
     "kubernetes.io/role/internal-elb"             = 1
   }
 }
@@ -45,7 +41,7 @@ module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "19.15.3"
 
-  cluster_name    = local.cluster_name
+  cluster_name    = "socksShop-eks"
   cluster_version = "1.27"
 
   vpc_id                         = module.vpc.vpc_id

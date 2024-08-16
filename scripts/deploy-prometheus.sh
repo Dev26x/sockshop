@@ -13,7 +13,7 @@ if [ -n "$GITHUB_ACTIONS" ]; then
     aws configure set default.region $AWS_REGION
 
     # Update kubeconfig for EKS cluster
-    aws eks update-kubeconfig --name $CLUSTER_NAME
+    aws eks update-kubeconfig --name "socksShop-eks" --region "us-east-1"
 fi
 
 # Define the namespace YAML file and NodePorts
