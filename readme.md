@@ -159,7 +159,7 @@ By port-forwarding, alert manager can be viewed in the browser.
 
 ## Scripts
 
-# Terraform script
+### Terraform script
 
 ![Terraform script](capstone-images/terraformscript.png)
 
@@ -168,7 +168,7 @@ Purpose: Manages infrastructure provisioning and updates using Terraform.
 - Outputs Variables: Outputs essential variables needed by subsequent workflows (e.g., Kubernetes cluster name, region).
 
 
-# Kubernetes Script
+### Kubernetes Script
 
 ![kubernetes script](capstone-images/kube-script.png)
 
@@ -177,7 +177,7 @@ Purpose: Deploys Kubernetes resources.
 - Ensures that all necessary Kubernetes objects (e.g., Deployments, Services, Ingresses) are created or updated.
 
 
-# Monitoring Scripts
+### Monitoring Scripts
 
 Prometheus 
 ![Prometheus script](capstone-images/prometheus-script.png)
@@ -195,7 +195,7 @@ Purpose: Deploys Grafana for visualization.
 - Sets up Grafana dashboards and configurations.
 
 
-# Alerting Script
+### Alerting Script
 
 ![Alert script](capstone-images/alertscript.png)
 
