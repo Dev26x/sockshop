@@ -17,7 +17,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Run the Terraform Setup Script
+      - name: Run the new Terraform Setup Script
         run: |
           chmod +x scripts/run-terraform.sh
           scripts/run-terraform.sh
