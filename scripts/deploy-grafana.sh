@@ -10,7 +10,7 @@ if [ -n "$GITHUB_ACTIONS" ]; then
     aws configure set default.region $AWS_REGION
 
     # Update kubeconfig for EKS cluster
-    aws eks update-kubeconfig --name "socksShop-eks" --region "us-east-1"
+    aws eks update-kubeconfig --name "sock-shop" --region "us-east-1"
 fi
 
 # Navigate to the monitoring directory

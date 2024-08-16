@@ -27,5 +27,5 @@ output "region" {
 }
 
 output "cluster_name" {
-  value = local.cluster_name
+  value = module.eks.cluster_name
 }
