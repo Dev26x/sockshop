@@ -5,7 +5,7 @@ set -e
 # Navigate to the Kubernetes directory
 cd "$(dirname "$0")/../kubernetes" || { echo "Kubernetes directory not found"; exit 1; }
 
-aws eks update-kubeconfig --name "sock-shop" --region "us-east-1"
+aws eks update-kubeconfig --name "sockshop" --region "us-east-1"
 
 # Install NGINX Ingress controller
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx

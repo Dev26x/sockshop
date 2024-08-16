@@ -2,7 +2,7 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 5.0"
 
-  name = "sock-shop"
+  name = "sockshop"
   cidr = "10.123.0.0/16"
 
   azs             = ["us-east-1a", "us-east-1b"]
@@ -18,7 +18,7 @@ module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 20.0"
 
-  cluster_name                   = "sock-shop"
+  cluster_name                   = "sockshop"
   cluster_version                = "1.30"
   cluster_endpoint_public_access = true
 

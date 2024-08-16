@@ -5,16 +5,7 @@ set -e
 # Navigate to the monitoring directory
 cd "$(dirname "$0")/../monitoring" || { echo "Monitoring directory not found"; exit 1; }
 
-# Check if running in GitHub Actions
-if [ -n "$GITHUB_ACTIONS" ]; then
-    # In GitHub Actions, ensure AWS CLI is configured
-    aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-    aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-    aws configure set default.region $AWS_REGION
-
-    # Update kubeconfig for EKS cluster
-    aws eks update-kubeconfig --name "sock-shop" --region "us-east-1"
-fi
+aws eks update-kubeconfig --name "sockshop" --region "us-east-1"
 
 # Define the namespace YAML file and NodePorts
 MONITORING_NAMESPACE_FILE="00-monitoring-ns.yaml"
