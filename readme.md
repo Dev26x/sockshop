@@ -159,7 +159,7 @@ By port-forwarding, alert manager can be viewed in the browser.
 
 ## Scripts
 
-Terraform script
+# Terraform script
 
 ![Terraform script](capstone-images/terraformscript.png)
 
@@ -167,7 +167,8 @@ Purpose: Manages infrastructure provisioning and updates using Terraform.
 - Terraform Initialization and Apply: The script initializes Terraform and applies the configuration to set up infrastructure resources, such as VPCs, EKS clusters, and other components.
 - Outputs Variables: Outputs essential variables needed by subsequent workflows (e.g., Kubernetes cluster name, region).
 
-Kubernetes Script
+
+# Kubernetes Script
 
 ![kubernetes script](capstone-images/kube-script.png)
 
@@ -175,7 +176,8 @@ Purpose: Deploys Kubernetes resources.
 - Applies Kubernetes manifests using kubectl.
 - Ensures that all necessary Kubernetes objects (e.g., Deployments, Services, Ingresses) are created or updated.
 
-Monitoring Scripts
+
+# Monitoring Scripts
 
 Prometheus 
 ![Prometheus script](capstone-images/prometheus-script.png)
@@ -184,6 +186,7 @@ Purpose: Deploys Prometheus monitoring tool.
 - Applies Prometheus manifests to the Kubernetes cluster.
 - Configures Prometheus for monitoring.
 
+
 Grafana 
 ![Grafana script](capstone-images/grafana-script.png)
 
@@ -191,7 +194,8 @@ Purpose: Deploys Grafana for visualization.
 - Applies Grafana manifests to the Kubernetes cluster.
 - Sets up Grafana dashboards and configurations.
 
-Alerting Script
+
+# Alerting Script
 
 ![Alert script](capstone-images/alertscript.png)
 
@@ -208,14 +212,17 @@ The CI/CD pipeline is implemented using GitHub Actions and consists of four work
 
     ![terraform workflow](capstone-images/terraform-wkflw.png)
 
+
 2. Kubernetes Deployment
 
     ![kubernetes workflow](capstone-images/kubernetes-wkflw.png)
+
 
 3. Monitoring
 
     Prometheus workflow
     ![prometheus workflow](capstone-images/prometheus-wkflw.png)
+
 
     Grafana workflow
     ![grafana workflow](capstone-images/grafana-wkflw.png)
