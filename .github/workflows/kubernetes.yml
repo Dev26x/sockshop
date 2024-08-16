@@ -1,4 +1,4 @@
-name: Kubernetes Deployment
+name: Deploy Kubernetes Resources
 
 on:
   workflow_run:
@@ -7,18 +7,28 @@ on:
       - completed
 
 jobs:
-  kubernetes:
-    name: Kubernetes Deployment
+  deploy:
+    name: Deploy Kubernetes Resources
     runs-on: ubuntu-latest
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_DEFAULT_REGION: ${{ vars.REGION }}
+      AWS_REGION: ${{ vars.REGION }} # Ensure this matches your region
+      EKS_CLUSTER_NAME: ${{ secrets.AWS_CLUSTER_NAME}}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Configure AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.REGION }}
+
+      - name: Make script executable
+        run: chmod +x scripts/apply-kubernetes.sh
+
       - name: Run Kubernetes Deployment Script
-        run: |
-          chmod +x scripts/apply-kubernetes.sh
-          scripts/apply-kubernetes.sh
+        run: ./scripts/apply-kubernetes.sh

@@ -9,7 +9,7 @@ locals {
   cluster_name = "socksShop-eks"
 }
 
-
+# VPC Module Configuration
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "5.0.0"
@@ -28,20 +28,52 @@ module "vpc" {
 
   public_subnet_tags = {
     "kubernetes.io/cluster/socksShop-eks" = "shared"
-    "kubernetes.io/role/elb"                      = 1
+    "kubernetes.io/role/elb"              = 1
   }
 
   private_subnet_tags = {
     "kubernetes.io/cluster/socksShop-eks" = "shared"
-    "kubernetes.io/role/internal-elb"             = 1
+    "kubernetes.io/role/internal-elb"     = 1
   }
 }
 
+# Conditional creation of KMS Alias
+resource "aws_kms_alias" "this" {
+  count = var.create_alias ? 1 : 0
+
+  name          = "alias/${var.kms_alias_name}"
+  target_key_id = aws_kms_key.this.id
+}
+
+variable "create_alias" {
+  description = "Whether to create the KMS alias"
+  default     = true
+}
+
+variable "kms_alias_name" {
+  description = "Name of the KMS alias"
+  default     = "eks/socksShop-eks"
+}
+
+# Conditional creation of CloudWatch Log Group
+resource "aws_cloudwatch_log_group" "this" {
+  count = var.create_log_group ? 1 : 0
+
+  name              = "/aws/eks/${local.cluster_name}/cluster"
+  retention_in_days = 90
+}
+
+variable "create_log_group" {
+  description = "Whether to create the CloudWatch Log Group"
+  default     = true
+}
+
+# EKS Module Configuration
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "19.15.3"
 
-  cluster_name    = "socksShop-eks"
+  cluster_name    = local.cluster_name
   cluster_version = "1.27"
 
   vpc_id                         = module.vpc.vpc_id
