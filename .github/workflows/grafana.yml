@@ -16,5 +16,5 @@ jobs:
 
       - name: Run Grafana Deployment Script
         run: |
-          chmod +x scripts/deploy_grafana.sh
-          scripts/deploy_grafana.sh
+          chmod +x scripts/deploy-grafana.sh
+          scripts/deploy-grafana.sh

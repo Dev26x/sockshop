@@ -16,5 +16,5 @@ jobs:
 
       - name: Run Prometheus Deployment Script
         run: |
-          chmod +x scripts/deploy_prometheus.sh
-          scripts/deploy_prometheus.sh
+          chmod +x scripts/deploy-prometheus.sh
+          scripts/deploy-prometheus.sh

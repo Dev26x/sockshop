@@ -15,5 +15,5 @@ jobs:
 
       - name: Run Terraform Setup Script
         run: |
-          chmod +x scripts/terraform_setup.sh
-          scripts/terraform_setup.sh
+          chmod +x scripts/run-terraform.sh
+          scripts/run-terraform.sh

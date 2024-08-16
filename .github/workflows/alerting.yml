@@ -16,5 +16,5 @@ jobs:
 
       - name: Run Alerting Setup Script
         run: |
-          chmod +x scripts/setup_alerting.sh
-          scripts/setup_alerting.sh
+          chmod +x scripts/alerting.sh
+          scripts/alerting.sh
