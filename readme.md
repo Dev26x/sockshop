@@ -78,8 +78,8 @@ This project demonstrates a complete setup for deploying microservices using Inf
 ## Setup
 
 1. Clone this repository:
-git clone https://github.com/your-username/your-repo-name.git
-cd your-repo-name
+git clone https://github.com/Dev26x/sockshop.git
+cd sockshop
 Copy
 2. Set up AWS credentials:
 - Create an IAM user with appropriate permissions
@@ -88,6 +88,7 @@ Copy
 3. Set up GitHub Secrets:
 - AWS_ACCESS_KEY_ID
 - AWS_SECRET_ACCESS_KEY
+- AWS_CLUSTER_NAME
 
 4. Set up GitHub Variables:
 - AWS_REGION (e.g., us-east-1)
