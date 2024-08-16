@@ -128,7 +128,7 @@ Certificate issued:
 
 ![monitoring](capstone-images/monitoring-alerting-img.png)
 
-Monitoring is set up using Prometheus and Grafana.
+Monitoring and logging  is set up using Prometheus and Grafana.
 
 I exposed prometheus and grafana to my dash board using port forwarding with these command:
 ```
