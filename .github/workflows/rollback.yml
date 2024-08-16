@@ -13,5 +13,5 @@ jobs:
 
       - name: Run Rollback Script
         run: |
-          chmod +x ./scripts/rollback.sh
-          ./scripts/rollback.sh
+          chmod +x scripts/rollback.sh
+          scripts/rollback.sh

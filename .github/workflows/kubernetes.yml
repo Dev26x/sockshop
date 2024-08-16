@@ -16,5 +16,5 @@ jobs:
 
       - name: Run Kubernetes Deployment Script
         run: |
-          chmod +x ./scripts/kubernetes_deploy.sh
-          ./scripts/kubernetes_deploy.sh
+          chmod +x scripts/kubernetes_deploy.sh
+          scripts/kubernetes_deploy.sh
