@@ -2,7 +2,7 @@
 
 set -e
 
-aws eks update-kubeconfig --name "sockshop" --region "us-east-1"
+aws eks update-kubeconfig --name "hakeem-shop" --region "us-east-1"
 
 # Navigate to the monitoring directory
 cd "$(dirname "$0")/../monitoring" || { echo "Monitoring directory not found"; exit 1; }

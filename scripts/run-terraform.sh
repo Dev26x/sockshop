@@ -39,7 +39,7 @@ terraform apply --auto-approve
 
 # Update kubeconfig for EKS cluster
 echo "Updating kubeconfig for EKS cluster..."
-aws eks update-kubeconfig --name "sockshop" --region "us-east-1"
+aws eks update-kubeconfig --name "hakeem-shop" --region "us-east-1"
 
 echo "Terraform setup has been completed successfully!"
 

@@ -5,7 +5,7 @@ set -e
 # Navigate to the monitoring directory
 cd "$(dirname "$0")/../monitoring" || { echo "Monitoring directory not found"; exit 1; }
 
-aws eks update-kubeconfig --name "sockshop" --region "us-east-1"
+aws eks update-kubeconfig --name "hakeem-shop" --region "us-east-1"
 
 # Define the namespace YAML file and NodePorts
 MONITORING_NAMESPACE_FILE="00-monitoring-ns.yaml"
