@@ -25,7 +25,7 @@ This project demonstrates a complete setup for deploying microservices using Inf
 
 - Infrastructure as Code using Terraform
 - Kubernetes deployment with NGINX Ingress and Cert-Manager
-- Monitoring with Prometheus and Grafana
+- Monitoring and logging with Prometheus and Grafana
 - Alerting with Alertmanager
 - Comprehensive CI/CD pipeline with GitHub Actions
 
@@ -50,7 +50,7 @@ This project demonstrates a complete setup for deploying microservices using Inf
 │   ├── alertmanager-configmap.yml
 │   ├── alertmanager-dep.yml
 │   └── alertmanager-svc.yml
-├── Monitoring/
+├── Monitoring & Logging/
 │   ├── [Prometheus & Grafana configuration files]
 ├── Kubernetes/
 │   ├── certificate.yml
