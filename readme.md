@@ -4,7 +4,7 @@
 
 This project demonstrates a complete setup for deploying microservices using Infrastructure as Code (IaC) with Terraform and Kubernetes. It includes a robust CI/CD pipeline using GitHub Actions, along with monitoring and alerting solutions.
 
-[Insert a high-level architecture diagram here]
+![AWS infrastructure](capstone-images/project-image.png)
 
 ## Table of Contents
 
@@ -38,8 +38,6 @@ This project demonstrates a complete setup for deploying microservices using Inf
 - Helm
 
 ## Project Structure
-
-![AWS infrastructure](capstone-images/project-image.png)
 
 ```
 .
